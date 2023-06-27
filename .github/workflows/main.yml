@@ -51,15 +51,18 @@ jobs:
           release_name: Release ${{ github.event.inputs.name }}
           draft: false
           prerelease: false
+      
+      - name: List directory contents
+        run: ls
                     
-      - name: Find Dist directory
-        run: |
-          dist_dir=$(find / -type d -name "chirpstack-concentratord-sx1302_4.2.0-test.2_arm64.tar.gz" 2>/dev/null | head -n 1)
-          if [ -n "$dist_dir" ]; then
-            echo "Dist directory found at $dist_dir"
-          else
-            echo "Dist directory not found"
-          fi
+      # - name: Find Dist directory
+        # run: |
+        #   dist_dir=$(find / -type d -name "chirpstack-concentratord-sx1302_4.2.0-test.2_arm64.tar.gz" 2>/dev/null | head -n 1)
+        #   if [ -n "$dist_dir" ]; then
+        #     echo "Dist directory found at $dist_dir"
+        #   else
+        #     echo "Dist directory not found"
+        #   fi
 
       - name: Upload files to GitHub Release
         uses: actions/upload-release-asset@v1
@@ -68,6 +71,6 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: dist/chirpstack-concentratord-sx1302_4.2.0-test.2_arm64.tar.gz
-          asset_name: binaries-${{ github.event.inputs.name }}.zip
-          asset_content_type: application/zip
+          asset_name: binaries-${{ github.event.inputs.name }}.tar.gz
+          asset_content_type: application/tar.gz
 
