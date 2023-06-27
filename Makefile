@@ -41,6 +41,9 @@ dist: build package
 # 	package-multitech-conduit \
 # 	package-multitech-conduit-ap
 
+package: package-targz-arm64
+
+
 # package-kerlink-ifemtocell:
 # 	cd packaging/vendor/kerlink/ifemtocell && ./package.sh
 # 	mkdir -p dist/vendor/kerlink/ifemtocell
