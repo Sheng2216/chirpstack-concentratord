@@ -1,4 +1,4 @@
-name: CI
+name: test-new-binaries
 on:
   workflow_dispatch:
     # Inputs the workflow accepts.
