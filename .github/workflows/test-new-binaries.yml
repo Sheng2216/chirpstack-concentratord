@@ -54,7 +54,7 @@ jobs:
                     
       - name: Find Dist directory
         run: |
-          dist_dir=$(find / -type d -name "dist" 2>/dev/null | head -n 1)
+          dist_dir=$(find / -type d -name "chirpstack-concentratord-sx1302_4.2.0-test.2_arm64.tar.gz" 2>/dev/null | head -n 1)
           if [ -n "$dist_dir" ]; then
             echo "Dist directory found at $dist_dir"
           else
@@ -67,7 +67,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN_FOR_GITHUB }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/*
+          asset_path: dist
           asset_name: binaries-${{ github.event.inputs.name }}.zip
           asset_content_type: application/zip
 
