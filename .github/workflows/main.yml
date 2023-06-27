@@ -1,11 +1,25 @@
 name: CI
+# on:
+#   push:
+#     branches:
+#       - 'test'
+#     tags:
+#       - 'v*'
+#   pull_request:
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
 on:
-  push:
-    branches:
-      - 'test'
-    tags:
-      - 'v*'
-  pull_request:
+  workflow_dispatch:
+    # Inputs the workflow accepts.
+    inputs:
+      name:
+        # Friendly description to be shown in the UI instead of 'name'
+        description: 'version to build'
+        # Default value if no value is explicitly provided
+        default: '0.0.1'
+        # Input has to be provided for the workflow to run
+        required: true
 
 jobs:
   tests:
@@ -92,6 +106,6 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./dist/*
-          asset_name: binaries.zip
+          asset_name: binaries-${{ github.event.inputs.name }}.zip
           asset_content_type: application/zip
 
