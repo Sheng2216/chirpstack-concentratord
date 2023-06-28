@@ -458,7 +458,7 @@ pub fn new(conf: &config::Configuration) -> Result<Configuration> {
             true => ComType::Usb,
             false => ComType::Spi,
         },
-        com_path: match (usb, port.as_str()) {
+        com_path: match (usb, port.to_string().as_str()) {    
             (true, "RAK7391_SLOT1") => "/dev/ttyACM0".to_string(),
             (true, "RAK7391_SLOT2") => "/dev/ttyS0".to_string(),
             (false, "RAK7391_SLOT1") => "/dev/spidev0.0".to_string(),
