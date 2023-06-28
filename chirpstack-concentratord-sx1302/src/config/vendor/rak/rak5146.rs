@@ -4,6 +4,11 @@ use libloragw_sx1302::hal;
 use super::super::super::super::config::{self, Region};
 use super::super::{ComType, Configuration, Gps, RadioConfig};
 
+pub enum Port {
+    RAK7391_SLOT1,
+    RAK7391_SLOT2,
+}
+
 // source:
 // https://github.com/RAKWireless/rak_common_for_gateway/blob/45c93c07f7/lora/rak5146/
 pub fn new(conf: &config::Configuration) -> Result<Configuration> {
@@ -397,6 +402,11 @@ pub fn new(conf: &config::Configuration) -> Result<Configuration> {
     };
 
     let gps = conf.gateway.model_flags.contains(&"GNSS".to_string());
+    let port = if conf.gateway.model_flags.contains(&"RAK7391_SLOT2".to_string()) {
+        Port::RAK7391_SLOT2
+    } else {
+        Port::RAK7391_SLOT1
+    };
     let usb = conf.gateway.model_flags.contains(&"USB".to_string());
 
     Ok(Configuration {
@@ -448,9 +458,12 @@ pub fn new(conf: &config::Configuration) -> Result<Configuration> {
             true => ComType::Usb,
             false => ComType::Spi,
         },
-        com_path: match usb {
-            true => "/dev/ttyACM0".to_string(),
-            false => "/dev/spidev0.0".to_string(),
+        com_path: match (usb, port) {    
+            (true, Port::AP1RAK7391_SLOT1) => "/dev/ttyACM0".to_string(),
+            (true, Port::AP1RAK7391_SLOT2) => "/dev/ttyS0".to_string(),
+            (false, Port::AP1RAK7391_SLOT1) => "/dev/spidev0.0".to_string(),
+            (false, Port::AP1RAK7391_SLOT2) => "/dev/spidev0.1".to_string(),
+            _ => panic!("Unknown configuration!"),
         },
         sx1302_reset_pin: match conf.gateway.sx1302_reset_pin {
             0 => Some(("/dev/gpiochip0".to_string(), 17)),
