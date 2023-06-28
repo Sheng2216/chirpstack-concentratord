@@ -459,10 +459,10 @@ pub fn new(conf: &config::Configuration) -> Result<Configuration> {
             false => ComType::Spi,
         },
         com_path: match (usb, port) {    
-            (true, Port::AP1RAK7391_SLOT1) => "/dev/ttyACM0".to_string(),
-            (true, Port::AP1RAK7391_SLOT2) => "/dev/ttyS0".to_string(),
-            (false, Port::AP1RAK7391_SLOT1) => "/dev/spidev0.0".to_string(),
-            (false, Port::AP1RAK7391_SLOT2) => "/dev/spidev0.1".to_string(),
+            (true, Port::RAK7391_SLOT1) => "/dev/ttyACM0".to_string(),
+            (true, Port::RAK7391_SLOT2) => "/dev/ttyS0".to_string(),
+            (false, Port::RAK7391_SLOT1) => "/dev/spidev0.0".to_string(),
+            (false, Port::RAK7391_SLOT2) => "/dev/spidev0.1".to_string(),
             _ => panic!("Unknown configuration!"),
         },
         sx1302_reset_pin: match conf.gateway.sx1302_reset_pin {
