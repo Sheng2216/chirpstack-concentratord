@@ -466,10 +466,17 @@ pub fn new(conf: &config::Configuration) -> Result<Configuration> {
             _ => panic!("Unknown configuration!"),
         },
         sx1302_reset_pin: match conf.gateway.sx1302_reset_pin {
-            0 => Some(("/dev/gpiochip0".to_string(), match port.clone() {
-                Port::RAK7391_SLOT1 => 17,
-                Port::RAK7391_SLOT2 => 6,
-            })),
+            // 0 => Some(("/dev/gpiochip0".to_string(), match port.clone() {
+            //     Port::RAK7391_SLOT1 => 17,
+            //     Port::RAK7391_SLOT2 => 6,
+            // })),
+            0 => {
+                let pin = match port {
+                    Port::RAK7391_SLOT1 => 17,
+                    Port::RAK7391_SLOT2 => 6,
+                };
+                Some(("/dev/gpiochip0".to_string(), pin))
+            },
             _ => Some(("/dev/gpiochip0".to_string(), conf.gateway.sx1302_reset_pin)),
         },
         sx1302_power_en_pin: match conf.gateway.sx1302_power_en_pin {
