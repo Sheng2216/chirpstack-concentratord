@@ -465,19 +465,21 @@ pub fn new(conf: &config::Configuration) -> Result<Configuration> {
             (false, Port::RAK7391_SLOT2) => "/dev/spidev0.1".to_string(),
             _ => panic!("Unknown configuration!"),
         },
-        sx1302_reset_pin: match conf.gateway.sx1302_reset_pin {
-            // 0 => Some(("/dev/gpiochip0".to_string(), match port.clone() {
-            //     Port::RAK7391_SLOT1 => 17,
-            //     Port::RAK7391_SLOT2 => 6,
-            // })),
-            0 => {
-                let pin = match port {
-                    Port::RAK7391_SLOT1 => 17,
-                    Port::RAK7391_SLOT2 => 6,
-                };
-                Some(("/dev/gpiochip0".to_string(), pin))
-            },
-            _ => Some(("/dev/gpiochip0".to_string(), conf.gateway.sx1302_reset_pin)),
+        // sx1302_reset_pin: match conf.gateway.sx1302_reset_pin {
+        //     0 => Some(("/dev/gpiochip0".to_string(), match port.clone() {
+        //         Port::RAK7391_SLOT1 => 17,
+        //         Port::RAK7391_SLOT2 => 6,
+        //     })),
+        //     _ => Some(("/dev/gpiochip0".to_string(), conf.gateway.sx1302_reset_pin)),
+        // },
+        // sx1302_reset_pin: match conf.gateway.sx1302_reset_pin {
+        //     0 => Some(("/dev/gpiochip0".to_string(), 17)),
+        //     _ => Some(("/dev/gpiochip0".to_string(), conf.gateway.sx1302_reset_pin)),
+        // },
+        sx1302_reset_pin: match (conf.gateway.sx1302_reset_pin, port) {    
+            (0, Port::RAK7391_SLOT1) => Some(("/dev/gpiochip0".to_string(), 17)),
+            (0, Port::RAK7391_SLOT2) => Some(("/dev/gpiochip0".to_string(), 6)),
+            (_,_) => Some(("/dev/gpiochip0".to_string(), conf.gateway.sx1302_reset_pin)),
         },
         sx1302_power_en_pin: match conf.gateway.sx1302_power_en_pin {
             0 => None,
