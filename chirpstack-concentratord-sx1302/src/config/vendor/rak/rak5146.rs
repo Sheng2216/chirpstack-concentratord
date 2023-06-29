@@ -466,18 +466,32 @@ pub fn new(conf: &config::Configuration) -> Result<Configuration> {
         //     (false, Port::RAK7391_SLOT2) => "/dev/spidev0.1".to_string(),
         //     _ => panic!("Unknown configuration!"),
         // },
+        // com_path: {
+        //     let mut path = match (usb, port) {    
+        //         (true, Port::RAK7391_SLOT1) => "/dev/ttyACM0".to_string(),
+        //         (true, Port::RAK7391_SLOT2) => "/dev/ttyACM1".to_string(),
+        //         (false, Port::RAK7391_SLOT1) => "/dev/spidev0.0".to_string(),
+        //         (false, Port::RAK7391_SLOT2) => "/dev/spidev0.1".to_string(),
+        //         _ => panic!("Unknown configuration!"),
+        //     };
+        //     if let Some(new_path) = conf.gateway.radio_dev.as_ref() {
+        //         path = new_path.clone();
+        //     }
+        //     path
+        // },
         com_path: {
-            let mut path = match (usb, port) {    
+            let path = match (usb, port) {    
                 (true, Port::RAK7391_SLOT1) => "/dev/ttyACM0".to_string(),
                 (true, Port::RAK7391_SLOT2) => "/dev/ttyACM1".to_string(),
                 (false, Port::RAK7391_SLOT1) => "/dev/spidev0.0".to_string(),
                 (false, Port::RAK7391_SLOT2) => "/dev/spidev0.1".to_string(),
                 _ => panic!("Unknown configuration!"),
             };
-            if let Some(new_path) = conf.gateway.radio_dev.as_ref() {
-                path = new_path.clone();
+            if let Some(new_path) = conf.gateway.radio_dev.as_ref().filter(|s| !s.is_empty()) {
+                new_path.to_string()
+            } else {
+                path
             }
-            path
         },
         sx1302_reset_pin: match conf.gateway.sx1302_reset_pin {
             0 => Some(("/dev/gpiochip0".to_string(), 17)),
