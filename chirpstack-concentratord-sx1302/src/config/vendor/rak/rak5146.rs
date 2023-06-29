@@ -459,20 +459,26 @@ pub fn new(conf: &config::Configuration) -> Result<Configuration> {
             true => ComType::Usb,
             false => ComType::Spi,
         },
-        com_path: match (usb, port) {    
-            (true, Port::RAK7391_SLOT1) => "/dev/ttyACM0".to_string(),
-            (true, Port::RAK7391_SLOT2) => "/dev/ttyACM1".to_string(),
-            (false, Port::RAK7391_SLOT1) => "/dev/spidev0.0".to_string(),
-            (false, Port::RAK7391_SLOT2) => "/dev/spidev0.1".to_string(),
-            _ => panic!("Unknown configuration!"),
-        },
-        // sx1302_reset_pin: match conf.gateway.sx1302_reset_pin {
-        //     0 => Some(("/dev/gpiochip0".to_string(), match port.clone() {
-        //         Port::RAK7391_SLOT1 => 17,
-        //         Port::RAK7391_SLOT2 => 6,
-        //     })),
-        //     _ => Some(("/dev/gpiochip0".to_string(), conf.gateway.sx1302_reset_pin)),
+        // com_path: match (usb, port) {    
+        //     (true, Port::RAK7391_SLOT1) => "/dev/ttyACM0".to_string(),
+        //     (true, Port::RAK7391_SLOT2) => "/dev/ttyACM1".to_string(),
+        //     (false, Port::RAK7391_SLOT1) => "/dev/spidev0.0".to_string(),
+        //     (false, Port::RAK7391_SLOT2) => "/dev/spidev0.1".to_string(),
+        //     _ => panic!("Unknown configuration!"),
         // },
+        com_path: {
+            let mut path = match (usb, port) {    
+                (true, Port::RAK7391_SLOT1) => "/dev/ttyACM0".to_string(),
+                (true, Port::RAK7391_SLOT2) => "/dev/ttyACM1".to_string(),
+                (false, Port::RAK7391_SLOT1) => "/dev/spidev0.0".to_string(),
+                (false, Port::RAK7391_SLOT2) => "/dev/spidev0.1".to_string(),
+                _ => panic!("Unknown configuration!"),
+            };
+            if let Some(new_path) = conf.gateway.radio_dev.as_ref() {
+                path = new_path.clone();
+            }
+            path
+        },
         sx1302_reset_pin: match conf.gateway.sx1302_reset_pin {
             0 => Some(("/dev/gpiochip0".to_string(), 17)),
             _ => Some(("/dev/gpiochip0".to_string(), conf.gateway.sx1302_reset_pin)),
