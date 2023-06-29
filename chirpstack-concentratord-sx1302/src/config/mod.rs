@@ -65,6 +65,7 @@ pub struct Gateway {
 
     pub region: Option<Region>,
     pub model: String,
+    pub radio_dev: String,
     #[serde(default)]
     pub model_flags: Vec<String>,
     #[serde(default)]
