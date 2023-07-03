@@ -492,8 +492,8 @@ pub fn new(conf: &config::Configuration) -> Result<Configuration> {
         //     }
         // },
         com_path: {
-            let path = if let Some(dev) = &conf.gateway.radio_dev {
-                dev.clone()
+            let path = if !conf.gateway.radio_dev.is_empty() {
+                conf.gateway.radio_dev.clone()
             } else {
                 match (usb, port) {    
                     (true, Port::RAK7391_SLOT1) => "/dev/ttyACM0".to_string(),
